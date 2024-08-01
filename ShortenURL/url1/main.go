@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"sync"
@@ -69,4 +70,6 @@ func main() {
 	http.HandleFunc("/shorten", shortenURLHandler)
 	http.HandleFunc("/redirect/", redirectHandler) // Modified the endpoint to include "/redirect/"
 	http.ListenAndServe(":8080", nil)
+	fmt.Println("URL shortener service running on http://localhost:8080/")
+
 }

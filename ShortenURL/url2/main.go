@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"time"
@@ -37,6 +38,8 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	shortURL := generateShortLink(6)
 	urlMap[shortURL] = request.URL
 
+	fmt.Printf("URL Map afetr adding: %+v\n", urlMap)
+
 	response := map[string]string{"short_url": "http://localhost:8080/" + shortURL}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
@@ -47,6 +50,10 @@ func originalURLHandler(w http.ResponseWriter, r *http.Request) {
 	shortURL := r.URL.Path[len("/original/"):]
 
 	originalURL, exists := urlMap[shortURL]
+
+	fmt.Printf("URL Map during retrieval: %+v\n ", urlMap)
+	fmt.Printf("Short URL: %s, Ecists: %v\n", shortURL, exists)
+
 	if !exists {
 		http.NotFound(w, r)
 		return
@@ -60,4 +67,5 @@ func main() {
 	http.HandleFunc("/shorten", shortenURLHandler)
 	http.HandleFunc("/original/", originalURLHandler)
 	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server is starting on 8080 port")
 }
